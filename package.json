@@ -1,0 +1,25 @@
+{
+  "name": "react-native-push-alarm-notification",
+  "version": "1.0.7",
+  "description": "Package to schedule alarm notifications in react native",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HarishDevadiga/react-native-push-alarm-notification.git"
+  },
+  "keywords": [
+    "react-native",
+    "alarm",
+    "notification",
+    "push-notification"
+  ],
+  "author": "Harish Devadiga",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/HarishDevadiga/react-native-push-alarm-notification/issues"
+  },
+  "homepage": "https://github.com/HarishDevadiga/react-native-push-alarm-notification#readme"
+}
