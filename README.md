@@ -3,7 +3,7 @@
 [![npm version](https://badge.fury.io/js/react-native-push-alarm-notification.svg?update=9)](//npmjs.com/package/react-native-push-alarm-notification)
 [![npm downloads](https://img.shields.io/npm/dm/react-native-push-alarm-notification.svg?update=9)](http://badge.fury.io/js/react-native-push-alarm-notification)
 
-This is a react-native library to schedule alarms with notifications.
+This is a react-native library to schedule alarms with notifications and launch the app.
 
 This Package is basically a copy of react-native-push-notification package with some added featue. You can find more details about that package [here](https://github.com/zo0r/react-native-push-notification)
 
