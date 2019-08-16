@@ -20,6 +20,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -410,6 +411,21 @@ public class RNPushAlarmNotificationHelper {
             // at the exact time. During testing, it was found that notifications could
             // late by many minutes.
             this.scheduleNextNotificationIfRepeating(bundle);
+
+            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+            PowerManager.WakeLock wakeLock = null;
+            if (pm != null) {
+                wakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK
+                        | PowerManager.ACQUIRE_CAUSES_WAKEUP
+                        | PowerManager.ON_AFTER_RELEASE, ":alarmWake");
+                wakeLock.acquire();
+            }
+
+            Intent dialogIntent = context.getPackageManager().getLaunchIntentForPackage(packageName);
+
+            dialogIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            
+            context.startActivity(dialogIntent);
         } catch (Exception e) {
             Log.e(LOG_TAG, "failed to send push notification", e);
         }
