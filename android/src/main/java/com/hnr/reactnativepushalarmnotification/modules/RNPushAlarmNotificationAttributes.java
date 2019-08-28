@@ -1,8 +1,8 @@
 package com.hnr.reactnativepushalarmnotification.modules;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-//import androidx.annotation.NonNull;
+//import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 import com.facebook.react.bridge.ReadableMap;
