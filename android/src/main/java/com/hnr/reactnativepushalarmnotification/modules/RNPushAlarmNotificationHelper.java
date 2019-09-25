@@ -1,6 +1,7 @@
 package com.hnr.reactnativepushalarmnotification.modules;
 
 
+import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.Application;
 import android.app.Notification;
@@ -34,6 +35,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import static com.hnr.reactnativepushalarmnotification.modules.RNPushAlarmNotification.LOG_TAG;
 import static com.hnr.reactnativepushalarmnotification.modules.RNPushAlarmNotificationAttributes.fromJson;
@@ -413,20 +415,29 @@ public class RNPushAlarmNotificationHelper {
             // late by many minutes.
             this.scheduleNextNotificationIfRepeating(bundle);
 
-            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-            PowerManager.WakeLock wakeLock = null;
-            if (pm != null) {
-                wakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK
-                        | PowerManager.ACQUIRE_CAUSES_WAKEUP
-                        | PowerManager.ON_AFTER_RELEASE, ":alarmWake");
-                wakeLock.acquire();
+            ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+            List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
+
+            for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
+                if (appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND && appProcess.processName.equals(packageName)) {
+                    Log.e( LOG_TAG,"app is foreground");
+                }else{
+                    Log.e(LOG_TAG, "app is background");
+                    PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+                    PowerManager.WakeLock wakeLock = null;
+                    if (pm != null) {
+                        wakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK
+                                | PowerManager.ACQUIRE_CAUSES_WAKEUP
+                                | PowerManager.ON_AFTER_RELEASE, ":alarmWake");
+                        wakeLock.acquire();
+                    }
+
+                    Intent dialogIntent = context.getPackageManager().getLaunchIntentForPackage(packageName);
+
+                    dialogIntent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK );
+
+                    context.startActivity(dialogIntent);                }
             }
-
-            Intent dialogIntent = context.getPackageManager().getLaunchIntentForPackage(packageName);
-
-            dialogIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            
-            context.startActivity(dialogIntent);
         } catch (Exception e) {
             Log.e(LOG_TAG, "failed to send push notification", e);
         }
