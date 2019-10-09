@@ -34,9 +34,7 @@ public class RNPushAlarmNotificationBootEventReceiver extends BroadcastReceiver 
                         RNPushAlarmNotificationAttributes notificationAttributes = RNPushAlarmNotificationAttributes.fromJson(notificationAttributesJson);
 
                         if (notificationAttributes.getFireDate() < System.currentTimeMillis()) {
-                            Log.i(LOG_TAG, "RNPushAlarmNotificationBootEventReceiver: Showing notification for " +
-                                    notificationAttributes.getId());
-                            rnPushNotificationHelper.sendToNotificationCentre(notificationAttributes.toBundle());
+                            rnPushNotificationHelper.openApplication();
                         } else {
                             Log.i(LOG_TAG, "RNPushAlarmNotificationBootEventReceiver: Scheduling notification for " +
                                     notificationAttributes.getId());

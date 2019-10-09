@@ -443,6 +443,34 @@ public class RNPushAlarmNotificationHelper {
         }
     }
 
+    public void openApplication(){
+        String packageName = context.getPackageName();
+
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
+
+        for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
+            if (appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND && appProcess.processName.equals(packageName)) {
+                Log.e( LOG_TAG,"app is foreground");
+            }else{
+                Log.e(LOG_TAG, "app is background");
+                PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+                PowerManager.WakeLock wakeLock = null;
+                if (pm != null) {
+                    wakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK
+                            | PowerManager.ACQUIRE_CAUSES_WAKEUP
+                            | PowerManager.ON_AFTER_RELEASE, ":alarmWake");
+                    wakeLock.acquire();
+                }
+
+                Intent dialogIntent = context.getPackageManager().getLaunchIntentForPackage(packageName);
+
+                dialogIntent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK );
+
+                context.startActivity(dialogIntent);                }
+        }
+    }
+
     private Uri getAlarmUri() {
         Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         if (alert == null) {
