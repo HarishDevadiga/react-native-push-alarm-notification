@@ -57,6 +57,7 @@ project.xcworkspace
 .idea
 .gradle
 local.properties
+android/*.iml
 
 # Example app
 example
