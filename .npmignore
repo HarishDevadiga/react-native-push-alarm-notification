@@ -53,7 +53,7 @@ project.xcworkspace
 
 # Android/IJ
 #
-react-native-notifications.iml
+*.iml
 .idea
 .gradle
 local.properties
