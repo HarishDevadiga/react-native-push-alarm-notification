@@ -34,12 +34,16 @@ NotificationsComponent.prototype.subscribeToTopic = function(topic: string) {
 	RNPushNotification.subscribeToTopic(topic);
 };
 
-NotificationsComponent.prototype.cancelLocalNotifications = function(details: Object) {
+NotificationsComponent.prototype.cancelLocalNotifications = function(details: String) {
 	RNPushNotification.cancelLocalNotifications(details);
 };
 
 NotificationsComponent.prototype.cancelMediaPlayer = function() {
 	RNPushNotification.cancelMediaPlayer();
+};
+
+NotificationsComponent.prototype.startCountDownTime = function(time: String) {
+	RNPushNotification.startCountDownTime(time);
 };
 
 NotificationsComponent.prototype.clearLocalNotification = function(details: Object) {

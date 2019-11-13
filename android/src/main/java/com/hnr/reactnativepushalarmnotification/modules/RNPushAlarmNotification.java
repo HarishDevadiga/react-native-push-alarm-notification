@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import android.os.CountDownTimer;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -37,6 +38,11 @@ public class RNPushAlarmNotification extends ReactContextBaseJavaModule implemen
     private RNPushAlarmNotificationHelper mRNPushNotificationHelper;
     private final Random mRandomNumberGenerator = new Random(System.currentTimeMillis());
     private RNPushAlarmNotificationJsDelivery mJsDelivery;
+    private CountDownTimer countDownTimer;
+
+
+
+    private RNCallMethods rnCallMethods;
 
     public RNPushAlarmNotification(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -49,6 +55,8 @@ public class RNPushAlarmNotification extends ReactContextBaseJavaModule implemen
         mRNPushNotificationHelper = new RNPushAlarmNotificationHelper(applicationContext);
         // This is used to delivery callbacks to JS
         mJsDelivery = new RNPushAlarmNotificationJsDelivery(reactContext);
+
+        rnCallMethods = new RNCallMethods(reactContext);
 
         registerNotificationsRegistration();
     }
@@ -227,11 +235,50 @@ public class RNPushAlarmNotification extends ReactContextBaseJavaModule implemen
 
     @ReactMethod
     public void cancelMediaPlayer(){
+
         mRNPushNotificationHelper.cancelMediaPlayer();
+        //rnCallMethods.callEvent();
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+            Log.e(LOG_TAG, "Timer stopped");
+        }
+
     }
 
     @ReactMethod
     public void registerNotificationActions(ReadableArray actions) {
         registerNotificationsReceiveNotificationActions(actions);
+    }
+
+    @ReactMethod
+    public void startCountDownTime(String countdownTime){
+        long timeToShutAlarm = Long.parseLong(countdownTime);
+
+        Log.e(LOG_TAG, "Timetoshutalarm "+timeToShutAlarm);
+
+
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+
+        timeToShutAlarm = timeToShutAlarm * 60 * 1000;
+
+        Log.e(LOG_TAG, "Timetoshutalarm "+timeToShutAlarm);
+        //timeToShutAlarm = 60 * 1000;
+        countDownTimer = new CountDownTimer(timeToShutAlarm, 1000) {
+            public void onTick(long millisUntilFinished) {
+                if (millisUntilFinished == 30000) {
+                    countDownTimer.onFinish();
+                    if (countDownTimer != null) {
+                        countDownTimer.cancel();
+                        Log.e(LOG_TAG, "Timer stopped");
+                    }
+                }
+            }
+
+            public void onFinish() {
+                rnCallMethods.callEvent();
+            }
+        }.start();
     }
 }

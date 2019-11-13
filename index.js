@@ -296,6 +296,11 @@ Notifications.cancelMediaPlayer = function() {
 	return this.callNative('cancelMediaPlayer');
 };
 
+Notifications.startCountDownTime = function() {
+	return this.callNative('startCountDownTime', arguments);
+};
+
+
 Notifications.clearLocalNotification = function() {
     return this.callNative('clearLocalNotification', arguments);
 };

@@ -103,6 +103,7 @@ public class RNPushAlarmNotificationHelper {
         }
 
         double fireDate = bundle.getDouble("fireDate");
+
         if (fireDate == 0) {
             Log.e(LOG_TAG, "No date specified for the scheduled notification");
             return;
@@ -442,6 +443,7 @@ public class RNPushAlarmNotificationHelper {
             Log.e(LOG_TAG, "failed to send push notification", e);
         }
     }
+
 
     public void openApplication(){
         String packageName = context.getPackageName();

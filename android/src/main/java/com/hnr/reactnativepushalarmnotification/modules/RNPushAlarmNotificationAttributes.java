@@ -37,6 +37,7 @@ public class RNPushAlarmNotificationAttributes {
     private static final String REPEAT_TYPE = "repeatType";
     private static final String REPEAT_TIME = "repeatTime";
     private static final String ONGOING = "ongoing";
+    //private static final String TIME = "time";
 
     private final String id;
     private final String message;
@@ -61,6 +62,7 @@ public class RNPushAlarmNotificationAttributes {
     private final String repeatType;
     private final double repeatTime;
     private final boolean ongoing;
+    //private final double time;
 
     public RNPushAlarmNotificationAttributes(Bundle bundle) {
         id = bundle.getString(ID);
@@ -113,6 +115,7 @@ public class RNPushAlarmNotificationAttributes {
             repeatType = jsonObject.has(REPEAT_TYPE) ? jsonObject.getString(REPEAT_TYPE) : null;
             repeatTime = jsonObject.has(REPEAT_TIME) ? jsonObject.getDouble(REPEAT_TIME) : 0.0;
             ongoing = jsonObject.has(ONGOING) ? jsonObject.getBoolean(ONGOING) : false;
+            //time = jsonObject.has(TIME)? jsonObject.getDouble(TIME): 20;
         } catch (JSONException e) {
             throw new IllegalStateException("Exception while initializing RNPushNotificationAttributes from JSON", e);
         }
