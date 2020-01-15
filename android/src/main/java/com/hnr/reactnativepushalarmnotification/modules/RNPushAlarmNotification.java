@@ -8,7 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-//import android.support.v4.app.NotificationManagerCompat;
+//import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.hnr.reactnativepushalarmnotification.helpers.ApplicationBadgeHelper;
@@ -26,6 +26,8 @@ import com.facebook.react.bridge.WritableMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -254,9 +256,6 @@ public class RNPushAlarmNotification extends ReactContextBaseJavaModule implemen
     public void startCountDownTime(String countdownTime){
         long timeToShutAlarm = Long.parseLong(countdownTime);
 
-        Log.e(LOG_TAG, "Timetoshutalarm "+timeToShutAlarm);
-
-
         if (countDownTimer != null) {
             countDownTimer.cancel();
         }
@@ -264,9 +263,10 @@ public class RNPushAlarmNotification extends ReactContextBaseJavaModule implemen
         timeToShutAlarm = timeToShutAlarm * 60 * 1000;
 
         Log.e(LOG_TAG, "Timetoshutalarm "+timeToShutAlarm);
-        //timeToShutAlarm = 60 * 1000;
         countDownTimer = new CountDownTimer(timeToShutAlarm, 1000) {
             public void onTick(long millisUntilFinished) {
+                Log.e(LOG_TAG, "millisUntilFinished "+millisUntilFinished);
+                rnCallMethods.callTimerEvent(millisUntilFinished / 1000 );
                 if (millisUntilFinished == 30000) {
                     countDownTimer.onFinish();
                     if (countDownTimer != null) {

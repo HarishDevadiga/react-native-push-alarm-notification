@@ -29,4 +29,11 @@ public class RNCallMethods {
 
         sendEvent(mReactContext, "RouteTo", params);
     }
+
+    public void callTimerEvent(long seconds) {
+        WritableMap params = Arguments.createMap();
+        params.putString("timerEventProperty", String.valueOf(seconds));
+
+        sendEvent(mReactContext, "SetTimerTo", params);
+    }
 }
