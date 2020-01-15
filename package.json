@@ -1,6 +1,6 @@
 {
   "name": "react-native-push-alarm-notification",
-  "version": "1.0.22",
+  "version": "1.0.23",
   "description": "Package to schedule alarm notifications in react native",
   "main": "index",
   "dependencies": {
