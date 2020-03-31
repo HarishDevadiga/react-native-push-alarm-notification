@@ -292,6 +292,10 @@ Notifications.cancelLocalNotifications = function() {
 	return this.callNative('cancelLocalNotifications', arguments);
 };
 
+Notifications.startMediaPlayer = function() {
+	return this.callNative('startMediaPlayer' , arguments);
+}
+
 Notifications.cancelMediaPlayer = function() {
 	return this.callNative('cancelMediaPlayer');
 };

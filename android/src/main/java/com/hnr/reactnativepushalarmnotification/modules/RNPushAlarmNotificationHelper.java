@@ -313,6 +313,7 @@ public class RNPushAlarmNotificationHelper {
                     mPlayer = MediaPlayer.create(context,soundUri);
                     mPlayer.start();
                     mPlayer.setLooping(true);
+                    Log.e(LOG_TAG, "start playing audio with notification");
                 } catch (Exception e){
                     Log.e(LOG_TAG, "failed to play ringtone", e);
                 }
@@ -482,6 +483,33 @@ public class RNPushAlarmNotificationHelper {
             }
         }
         return alert;
+    }
+
+    public void startMediaPlayer(String soundName) {
+        Uri soundUri = getAlarmUri();
+        if (soundName != null) {
+            int resId;
+            if (context.getResources().getIdentifier(soundName, "raw", context.getPackageName()) != 0) {
+                resId = context.getResources().getIdentifier(soundName, "raw", context.getPackageName());
+            } else {
+                soundName = soundName.substring(0, soundName.lastIndexOf('.'));
+                resId = context.getResources().getIdentifier(soundName, "raw", context.getPackageName());
+            }
+
+            soundUri = Uri.parse("android.resource://" + context.getPackageName() + "/" + resId);
+        }
+        try {
+            if(mPlayer == null) {
+                mPlayer = MediaPlayer.create(context,soundUri);
+                mPlayer.start();
+                mPlayer.setLooping(true);
+                Log.e(LOG_TAG, "start playing alarm sound" );
+            } else {
+                Log.e(LOG_TAG, "AlarmSound is already playing" );
+            }
+        } catch (Exception e){
+            Log.e(LOG_TAG, "failed to play ringtone", e);
+        }
     }
 
     public void cancelMediaPlayer() {

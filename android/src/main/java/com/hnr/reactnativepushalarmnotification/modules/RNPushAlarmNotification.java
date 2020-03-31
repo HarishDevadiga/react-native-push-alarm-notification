@@ -248,6 +248,11 @@ public class RNPushAlarmNotification extends ReactContextBaseJavaModule implemen
     }
 
     @ReactMethod
+    public void startMediaPlayer(String sound){
+        mRNPushNotificationHelper.startMediaPlayer(sound);
+    }
+
+    @ReactMethod
     public void registerNotificationActions(ReadableArray actions) {
         registerNotificationsReceiveNotificationActions(actions);
     }

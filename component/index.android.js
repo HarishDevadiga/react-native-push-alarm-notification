@@ -38,6 +38,10 @@ NotificationsComponent.prototype.cancelLocalNotifications = function(details: St
 	RNPushNotification.cancelLocalNotifications(details);
 };
 
+NotificationsComponent.prototype.startMediaPlayer = function(soundName: String) {
+	RNPushNotification.startMediaPlayer(soundName);
+};
+
 NotificationsComponent.prototype.cancelMediaPlayer = function() {
 	RNPushNotification.cancelMediaPlayer();
 };
