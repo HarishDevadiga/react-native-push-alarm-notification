@@ -132,13 +132,18 @@ public class RNPushAlarmNotificationHelper {
         // If the fireDate is in past, this will fire immediately and show the
         // notification to the user
         PendingIntent pendingIntent = toScheduleNotificationIntent(bundle);
-
+        String packageName = context.getPackageName();
+        int hashedTimeId = java.lang.Long.valueOf(fireDate).hashCode();
+        PendingIntent mainIntent = PendingIntent.getActivity(context, hashedTimeId,
+                context.getPackageManager().getLaunchIntentForPackage(packageName),
+                PendingIntent.FLAG_UPDATE_CURRENT);
         Log.d(LOG_TAG, String.format("Setting a notification with id %s at time %s",
                 bundle.getString("id"), Long.toString(fireDate)));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getAlarmManager().setAlarmClock(new AlarmManager.AlarmClockInfo(fireDate, mainIntent), pendingIntent);
+            //getAlarmManager().setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, fireDate, pendingIntent);
+        }else {
             getAlarmManager().setExact(AlarmManager.RTC_WAKEUP, fireDate, pendingIntent);
-        } else {
-            getAlarmManager().set(AlarmManager.RTC_WAKEUP, fireDate, pendingIntent);
         }
     }
 
@@ -215,11 +220,15 @@ public class RNPushAlarmNotificationHelper {
                 }
             }
 
+            PendingIntent pendingNotify = PendingIntent.getActivity(context,0, new Intent(context, intentClass),PendingIntent.FLAG_UPDATE_CURRENT);
+
             NotificationCompat.Builder notification = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
                     .setContentTitle(title)
                     .setTicker(bundle.getString("ticker"))
                     .setVisibility(visibility)
                     .setPriority(priority)
+                    .setFullScreenIntent(pendingNotify, true)
+                    .setCategory(NotificationCompat.CATEGORY_ALARM)
                     .setAutoCancel(bundle.getBoolean("autoCancel", true));
 
             String group = bundle.getString("group");
@@ -428,7 +437,7 @@ public class RNPushAlarmNotificationHelper {
                     PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
                     PowerManager.WakeLock wakeLock = null;
                     if (pm != null) {
-                        wakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK
+                        wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK
                                 | PowerManager.ACQUIRE_CAUSES_WAKEUP
                                 | PowerManager.ON_AFTER_RELEASE, ":alarmWake");
                         wakeLock.acquire();
@@ -438,7 +447,10 @@ public class RNPushAlarmNotificationHelper {
 
                     dialogIntent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK );
 
-                    context.startActivity(dialogIntent);                }
+                    context.startActivity(dialogIntent);
+
+                    wakeLock.release();
+                }
             }
         } catch (Exception e) {
             Log.e(LOG_TAG, "failed to send push notification", e);
